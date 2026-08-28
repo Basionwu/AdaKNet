@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AdaKNet Audio Demo</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            margin: 0;
+            padding: 40px 20px;
+
+            background-color: #f7f8fa;
+            color: #333;
+        }
+
+
+        /* ====================================================
+           Main container
+        ==================================================== */
+
+        .container {
+            max-width: 1650px;
+            margin: 0 auto;
+
+            background: white;
+
+            padding: 42px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 18px
+                rgba(0, 0, 0, 0.06);
+        }
+
+
+        /* ====================================================
+           Header
+        ==================================================== */
+
+        h1 {
+            text-align: center;
+
+            font-size: 2.4em;
+
+            margin-top: 5px;
+            margin-bottom: 10px;
+
+            color: #263445;
+        }
+
+
+        .subtitle {
+            text-align: center;
+
+            font-size: 1.08em;
+
+            line-height: 1.7;
+
+            color: #667085;
+
+            margin-bottom: 45px;
+        }
+
+
+        /* ====================================================
+           Dataset title
+        ==================================================== */
+
+        h2 {
+            font-size: 1.5em;
+
+            margin-top: 50px;
+            margin-bottom: 18px;
+
+            color: #344054;
+
+            border-bottom: 2px solid #eaecf0;
+
+            padding-bottom: 10px;
+        }
+
+
+        .dataset-description {
+            color: #667085;
+
+            font-size: 0.94em;
+
+            margin-top: -8px;
+            margin-bottom: 18px;
+        }
+
+
+        /* ====================================================
+           Table
+        ==================================================== */
+
+        .table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+
+            margin-bottom: 45px;
+
+            border: 1px solid #eaecf0;
+
+            border-radius: 10px;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            text-align: center;
+
+            min-width: 1200px;
+        }
+
+
+        th,
+        td {
+            padding: 15px 10px;
+
+            vertical-align: middle;
+
+            border-bottom: 1px solid #eaecf0;
+        }
+
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        th {
+            font-weight: 600;
+
+            font-size: 1em;
+
+            background-color: #f9fafb;
+
+            color: #344054;
+
+            white-space: nowrap;
+        }
+
+
+        tbody tr:hover {
+            background-color: #fcfcfd;
+        }
+
+
+        /* ====================================================
+           Sample information
+        ==================================================== */
+
+        .condition-col {
+            font-weight: 600;
+
+            text-align: left;
+
+            white-space: nowrap;
+
+            min-width: 155px;
+
+            color: #475467;
+        }
+
+
+        .sample-id {
+            display: block;
+
+            margin-top: 4px;
+
+            font-size: 0.84em;
+
+            font-weight: normal;
+
+            color: #98a2b3;
+        }
+
+
+        .noise-type {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 0.82em;
+
+            font-weight: normal;
+
+            color: #667085;
+        }
+
+
+        /* ====================================================
+           Audio
+        ==================================================== */
+
+        audio {
+            width: 170px;
+
+            height: 38px;
+
+            outline: none;
+        }
+
+
+        /* ====================================================
+           Highlight AdaKNet
+        ==================================================== */
+
+        .adaknet-header {
+            background-color: #eef6ff;
+
+            color: #175cd3;
+
+            font-weight: 700;
+        }
+
+
+        .adaknet-cell {
+            background-color: #f5faff;
+        }
+
+
+        /* ====================================================
+           Scrollbar
+        ==================================================== */
+
+        .table-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+
+
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #cfd4dc;
+
+            border-radius: 4px;
+        }
+
+
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f2f4f7;
+        }
+
+
+        /* ====================================================
+           Footer
+        ==================================================== */
+
+        .footer {
+            margin-top: 55px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #eaecf0;
+
+            text-align: center;
+
+            color: #98a2b3;
+
+            font-size: 0.9em;
+        }
+
+
+        /* ====================================================
+           Mobile
+        ==================================================== */
+
+        @media (max-width: 900px) {
+
+            body {
+                padding: 15px 6px;
+            }
+
+
+            .container {
+                padding: 20px 12px;
+            }
+
+
+            h1 {
+                font-size: 1.75em;
+            }
+
+
+            h2 {
+                font-size: 1.25em;
+            }
+
+
+            audio {
+                width: 145px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- ======================================================
+         Header
+    ======================================================= -->
+
+    <h1>AdaKNet</h1>
+
+    <div class="subtitle">
+
+        Audio demonstrations for low-SNR speech enhancement.<br>
+
+        We compare the noisy speech, competing speech enhancement
+        systems, AdaKNet, and the corresponding clean reference.
+
+    </div>
+
+
+    <!-- ======================================================
+         Demo content
+    ======================================================= -->
+
+    <div id="demo-content"></div>
+
+
+    <!-- ======================================================
+         Footer
+    ======================================================= -->
+
+    <div class="footer">
+
+        AdaKNet Speech Enhancement Demo
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* ============================================================
+   Columns
+
+   注意：
+   folder 不再代表文件夹，
+   而是对应文件名最后面的 suffix。
+============================================================ */
+
+const modelColumns = [
+
+    {
+        label: "Clean",
+        suffix: "clean"
+    },
+
+    {
+        label: "Noisy",
+        suffix: "noisy"
+    },
+
+    {
+        label: "DyTSwiG-SE",
+        suffix: "DyTSwiG-SE"
+    },
+
+    {
+        label: "MP-SENet",
+        suffix: "MP-SENet"
+    },
+
+    {
+        label: "PrimeK-Net",
+        suffix: "PrimeK-Net"
+    },
+
+    {
+        label: "AdaKNet",
+        suffix: "AdaKNet",
+        highlight: true
+    }
+
+];
+
+
+
+/* ============================================================
+   Dataset configuration
+============================================================ */
+
+const datasets = [
+
+
+    /* ========================================================
+       DNS: -10 ~ -5 dB
+    ======================================================== */
+
+    {
+
+        title:
+            "DNS-Challenge: -10 to -5 dB",
+
+        description:
+            "Representative low-SNR samples selected from the DNS Challenge test set.",
+
+        basePath:
+            "./demo/DNS-10dB",
+
+        rows: [
+
+            {
+                id: "84",
+                snr: "-10",
+                prefix: "84_-10dB",
+                noise: ""
+            },
+
+            {
+                id: "76",
+                snr: "-10",
+                prefix: "76_-10dB",
+                noise: ""
+            },
+
+            {
+                id: "95",
+                snr: "-10",
+                prefix: "95_-10dB",
+                noise: ""
+            },
+
+            {
+                id: "11",
+                snr: "-10",
+                prefix: "11_-10dB",
+                noise: ""
+            },
+
+            {
+                id: "90",
+                snr: "-10",
+                prefix: "90_-10dB",
+                noise: ""
+            }
+
+        ]
+
+    },
+
+
+
+    /* ========================================================
+       DNS: -15 ~ -10 dB
+    ======================================================== */
+
+    {
+
+        title:
+            "DNS-Challenge: -15 to -10 dB",
+
+        description:
+            "More challenging DNS speech samples under extremely low-SNR conditions.",
+
+        basePath:
+            "./demo/DNS-15dB",
+
+        rows: [
+
+            {
+                id: "84",
+                snr: "-15 to -10",
+                prefix: "84_-15-n10dB",
+                noise: ""
+            },
+
+            {
+                id: "76",
+                snr: "-15 to -10",
+                prefix: "76_-15-n10dB",
+                noise: ""
+            },
+
+            {
+                id: "95",
+                snr: "-15 to -10",
+                prefix: "95_-15-n10dB",
+                noise: ""
+            },
+
+            {
+                id: "11",
+                snr: "-15 to -10",
+                prefix: "11_-15-n10dB",
+                noise: ""
+            },
+
+            {
+                id: "90",
+                snr: "-15 to -10",
+                prefix: "90_-15-n10dB",
+                noise: ""
+            }
+
+        ]
+
+    },
+
+
+
+    /* ========================================================
+       NoiseX-92: -5 ~ 0 dB
+    ======================================================== */
+
+    {
+
+        title:
+            "NoiseX-92: -5 to 0 dB",
+
+        description:
+            "Speech corrupted by different NoiseX-92 noise types under low-SNR conditions.",
+
+        basePath:
+            "./demo/Noise92-5dB",
+
+        rows: [
+
+            {
+                id: "0028",
+                snr: "-2",
+                prefix: "0028_-2dB",
+                noise: "Babble"
+            },
+
+            {
+                id: "0010",
+                snr: "-5",
+                prefix: "0010_-5dB",
+                noise: "Destroyerops"
+            },
+
+            {
+                id: "0026",
+                snr: "-5",
+                prefix: "0026_-5dB",
+                noise: "Buccaneer1"
+            },
+
+            {
+                id: "0098",
+                snr: "-5",
+                prefix: "0098_-5dB",
+                noise: "Factory1"
+            },
+
+            {
+                id: "0077",
+                snr: "-2",
+                prefix: "0077_-2dB",
+                noise: "Babble"
+            }
+
+        ]
+
+    },
+
+
+
+    /* ========================================================
+       NoiseX-92: -10 ~ -5 dB
+    ======================================================== */
+
+    {
+
+        title:
+            "NoiseX-92: -10 to -5 dB",
+
+        description:
+            "Extremely challenging NoiseX-92 samples with multiple non-stationary noise types.",
+
+        basePath:
+            "./demo/Noise92-10dB",
+
+        rows: [
+
+            {
+                id: "0066",
+                snr: "-10",
+                prefix: "0066_-10dB",
+                noise: "Babble"
+            },
+
+            {
+                id: "0099",
+                snr: "-7",
+                prefix: "0099_-7dB",
+                noise: "Destroyerops"
+            },
+
+            {
+                id: "0092",
+                snr: "-6",
+                prefix: "0092_-6dB",
+                noise: "Destroyerops"
+            },
+
+            {
+                id: "0006",
+                snr: "-10",
+                prefix: "0006_-10dB",
+                noise: "Machinegun"
+            },
+
+            {
+                id: "0089",
+                snr: "-8",
+                prefix: "0089_-8dB",
+                noise: "Factory1"
+            }
+
+        ]
+
+    }
+
+];
+
+
+
+/* ============================================================
+   Create audio cell
+
+   最终地址例如：
+
+   ./demo/Noise92-10dB/
+       0066_-10dB_AdaKNet.wav
+============================================================ */
+
+function createAudioCell(
+    basePath,
+    prefix,
+    model
+) {
+
+    const fileName =
+        `${prefix}_${model.suffix}.wav`;
+
+    const src =
+        `${basePath}/${fileName}`;
+
+
+    const className =
+        model.highlight
+        ? "adaknet-cell"
+        : "";
+
+
+    return `
+
+        <td class="${className}">
+
+            <audio
+                controls
+                preload="none"
+                src="${src}"
+            >
+
+                Your browser does not support
+                the audio element.
+
+            </audio>
+
+        </td>
+
+    `;
+
+}
+
+
+
+/* ============================================================
+   Create table
+============================================================ */
+
+function createTable(dataset) {
+
+
+    /* --------------------------------------------------------
+       Table header
+    -------------------------------------------------------- */
+
+    const tableHead = `
+
+        <h2>
+            ${dataset.title}
+        </h2>
+
+
+        <div class="dataset-description">
+
+            ${dataset.description}
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+
+            <table>
+
+
+                <thead>
+
+                    <tr>
+
+                        <th style="text-align:left;">
+
+                            Sample / SNR
+
+                        </th>
+
+
+                        ${
+
+                            modelColumns.map(
+
+                                model => `
+
+                                    <th class="${
+                                        model.highlight
+                                        ? "adaknet-header"
+                                        : ""
+                                    }">
+
+                                        ${model.label}
+
+                                    </th>
+
+                                `
+
+                            ).join("")
+
+                        }
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+    `;
+
+
+
+    /* --------------------------------------------------------
+       Rows
+    -------------------------------------------------------- */
+
+    const tableBody = dataset.rows.map(
+
+        row => `
+
+
+            <tr>
+
+
+                <td class="condition-col">
+
+
+                    SNR ${row.snr} dB
+
+
+                    <span class="sample-id">
+
+                        Sample ${row.id}
+
+                    </span>
+
+
+                    ${
+
+                        row.noise
+
+                        ?
+
+                        `
+
+                        <span class="noise-type">
+
+                            ${row.noise}
+
+                        </span>
+
+                        `
+
+                        :
+
+                        ""
+
+                    }
+
+
+                </td>
+
+
+                ${
+
+                    modelColumns.map(
+
+                        model =>
+
+                            createAudioCell(
+                                dataset.basePath,
+                                row.prefix,
+                                model
+                            )
+
+                    ).join("")
+
+                }
+
+
+            </tr>
+
+
+        `
+
+    ).join("");
+
+
+
+    /* --------------------------------------------------------
+       Footer
+    -------------------------------------------------------- */
+
+    const tableFooter = `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    return (
+        tableHead
+        + tableBody
+        + tableFooter
+    );
+
+}
+
+
+
+/* ============================================================
+   Render
+============================================================ */
+
+document
+    .getElementById("demo-content")
+    .innerHTML =
+        datasets
+        .map(createTable)
+        .join("");
+
+
+</script>
+
+
+</body>
+
+</html>
